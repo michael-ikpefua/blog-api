@@ -2,13 +2,16 @@ package com.michael.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@Component
 public class UserRegisterRequest {
     @NotEmpty(message = "Field cannot be blank")
     private String fullName;
@@ -16,6 +19,6 @@ public class UserRegisterRequest {
     @Email
     private String email;
     @NotEmpty(message = "Password field is required")
-    @Min(value = 4, message = "Password filed should be more than 4 character long")
+    @Size(min = 3, message = "Password field should be more than 3 characters long")
     private String password;
 }
