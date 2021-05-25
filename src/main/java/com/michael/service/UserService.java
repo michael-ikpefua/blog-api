@@ -38,4 +38,8 @@ public class UserService implements IUserService {
 
         return user;
     }
+
+    public boolean checkIfUserExist(String email) {
+       return userRepository.existsUsersByEmail(email);
+    }
 }

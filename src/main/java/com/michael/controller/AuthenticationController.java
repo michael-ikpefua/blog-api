@@ -9,10 +9,7 @@ import com.michael.service.contracts.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -24,9 +21,13 @@ public class AuthenticationController {
     @Autowired
     IUserService userService;
 
-    @RequestMapping(path = "register")
+    @PostMapping(path = "register")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRegisterRequest request, HttpSession session) {
 
+        boolean isUserExists = userService.checkIfUserExist(request.getEmail());
+        if (isUserExists) {
+            throw new UserException("User email already exist. Please Login");
+        }
         User user = userService.register(request);
         session.setAttribute("user_session", user);
 
@@ -36,6 +37,7 @@ public class AuthenticationController {
 
     @GetMapping(path = "login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequest request, HttpSession session) {
+
         User user = userService.login(request);
         if (user == null) {
             throw new UserException("Check Email or Password");
