@@ -2,10 +2,13 @@ package com.michael.service;
 
 import com.michael.model.User;
 import com.michael.repository.UserRepository;
+import com.michael.request.UserLoginRequest;
 import com.michael.request.UserRegisterRequest;
 import com.michael.service.contracts.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
@@ -22,5 +25,17 @@ public class UserService implements IUserService {
 
         return userRepository.save(user);
 
+    }
+
+    @Override
+    public User login(UserLoginRequest request) {
+        User user = null;
+        Optional<User> optionalUser = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+            return user;
+        }
+
+        return user;
     }
 }
