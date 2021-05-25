@@ -68,7 +68,34 @@ public class PostController {
 
     }
 
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<?> destroy(@PathVariable(value = "id") Long id, HttpSession session) {
+
+        User authUser = authUser(session);
+        Post post = postService.getPostById(id);
+
+        if (authUser == null) {
+            throw new UserException("Please Login before you can delete Post");
+        }
+
+        if (post == null) {
+            throw new PostException("Post Not Found");
+        }
+
+        if (authUser.getId() != post.getUser().getId()) {
+            throw new UserException("User cannot delete this post, because this user is not the owner of the post");
+        }
+
+        postService.destroyPost(id);
+        PostResponse postResponse = new PostResponse();
+        postResponse.setMessage("Post Deleted Successfully!");
+
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+    }
+
     public User authUser(HttpSession session) {
         return (User) session.getAttribute("user_session");
     }
+
+
 }

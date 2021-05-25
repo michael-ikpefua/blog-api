@@ -46,4 +46,9 @@ public class PostService implements IPostService {
 
         return postRepository.save(post);
     }
+
+    @Override
+    public void destroyPost(Long id) {
+        postRepository.deleteById(id);
+    }
 }

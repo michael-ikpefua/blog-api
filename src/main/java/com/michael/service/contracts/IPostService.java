@@ -11,5 +11,6 @@ public interface IPostService {
     List<Post> getPosts();
     Post getPostById(Long id);
     Post updatePost(Post post, PostRequest request);
+    void destroyPost(Long id);
 
 }
