@@ -1,16 +1,15 @@
 package com.michael.response;
 
 import com.michael.model.Post;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class PostResponse {
     private Post post;
     private String message;
+    private List<Post> posts;
 }

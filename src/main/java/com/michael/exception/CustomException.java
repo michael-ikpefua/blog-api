@@ -30,4 +30,15 @@ public class CustomException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(message, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = PostException.class)
+    public ResponseEntity<Object> handlePostException(PostException exception, WebRequest webRequest) {
+
+        String message = exception.getLocalizedMessage();
+        if (message == null) message = exception.toString();
+
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), message);
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
 }
