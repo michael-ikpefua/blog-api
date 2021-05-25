@@ -5,23 +5,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "posts")
-public class Post extends AutoDate {
-
+@Table(name = "comments")
+public class Comment extends AutoDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+
 }

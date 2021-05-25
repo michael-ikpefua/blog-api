@@ -21,17 +21,8 @@ public class CustomException extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler(value = UserException.class)
-    public ResponseEntity<Object> handleInvalidLogin(UserException exception, WebRequest webRequest) {
-        String msg = exception.getLocalizedMessage();
-        if (msg == null) msg = exception.toString();
-
-        ErrorMessage message = new ErrorMessage(new Date(), msg);
-        return new ResponseEntity<>(message, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(value = PostException.class)
-    public ResponseEntity<Object> handlePostException(PostException exception, WebRequest webRequest) {
+    @ExceptionHandler(value = {PostException.class, UserException.class, CommentException.class})
+    public ResponseEntity<Object> handlePostException(Exception exception, WebRequest webRequest) {
 
         String message = exception.getLocalizedMessage();
         if (message == null) message = exception.toString();
