@@ -8,6 +8,7 @@ import com.michael.model.Post;
 import com.michael.model.User;
 import com.michael.request.CommentRequest;
 import com.michael.response.CommentResponse;
+import com.michael.response.PostResponse;
 import com.michael.service.contracts.ICommentService;
 import com.michael.service.contracts.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 
@@ -29,8 +31,12 @@ public class CommentController {
 
     @Autowired
     ICommentService commentService;
+
     @Autowired
     CommentResponse commentResponse;
+
+    @Autowired
+    PostResponse postResponse;
 
     @GetMapping(path = "posts/{postId}/comments")
     @Transactional
@@ -39,9 +45,9 @@ public class CommentController {
         if (post == null) {
             throw new PostException("Post Not Found");
         }
-        List<Comment> comments = post.getComments();
+
         commentResponse.setMessage("List of Comments for " + post.getTitle());
-        commentResponse.setComments(comments);
+        commentResponse.setComments(post.getComments());
 
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
@@ -63,8 +69,14 @@ public class CommentController {
 
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
+//
+//    @GetMapping("/comment/{commentId}")
+//    public Comment show(@PathVariable Long commentId){
+//        Comment comment = commentService.getCommentById(commentId);
+//        return comment;
+//    }
 
-    @PutMapping(path = "comment/{commentId}")
+    @PutMapping(path = "comments/{commentId}")
     public ResponseEntity<CommentResponse> update(@PathVariable(value = "commentId") Long commentId, @Valid @RequestBody CommentRequest request) {
 
         Comment comment = commentService.getCommentById(commentId);
@@ -78,6 +90,13 @@ public class CommentController {
 
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);
 
+    }
+
+    @DeleteMapping(path = "comments/{commentId}")
+    public ResponseEntity<?> destroy(@PathVariable(value = "commentId") Long commentId) {
+        commentService.destroyPost(commentId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     public User authUser(HttpSession session) {

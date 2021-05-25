@@ -9,7 +9,9 @@ import com.michael.service.contracts.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CommentService implements ICommentService {
@@ -20,8 +22,8 @@ public class CommentService implements ICommentService {
     @Override
     public Comment addComment(CommentRequest request, Post post, User user) {
         Comment comment = new Comment();
-        comment.setUser(user);
-        comment.setPost(post);
+//        comment.setUser(user);
+//        comment.setPost(post);
         comment.setBody(request.getBody());
 
         return commentRepository.save(comment);
@@ -39,5 +41,10 @@ public class CommentService implements ICommentService {
         comment.setBody(request.getBody());
 
         return commentRepository.save(comment);
+    }
+
+    @Override
+    public void destroyPost(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 }

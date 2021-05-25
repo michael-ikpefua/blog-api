@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +20,5 @@ public class User extends AutoDate {
     private String fullName;
     private String email;
     private String password;
+
 }
