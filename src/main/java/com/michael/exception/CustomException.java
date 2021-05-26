@@ -21,7 +21,7 @@ public class CustomException extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler(value = {PostException.class, UserException.class, CommentException.class})
+    @ExceptionHandler(value = {PostException.class, UserException.class, CommentException.class, LikePostException.class})
     public ResponseEntity<Object> handlePostException(Exception exception, WebRequest webRequest) {
 
         String message = exception.getLocalizedMessage();
