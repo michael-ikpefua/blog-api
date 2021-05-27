@@ -16,5 +16,5 @@ public interface ICommentService {
 
     Comment updateComment(Comment comment, CommentRequest request);
 
-    void destroyPost(Long commentId);
+    void destroyComment(Long commentId);
 }

@@ -31,9 +31,6 @@ public class CommentController {
     ICommentService commentService;
 
     @Autowired
-    CommentResponse commentResponse;
-
-    @Autowired
     PostResponse postResponse;
 
     @GetMapping(path = "posts/{postId}/comments")
@@ -43,7 +40,7 @@ public class CommentController {
         if (post == null) {
             throw new PostException("Post Not Found");
         }
-
+        CommentResponse commentResponse = new CommentResponse();
         commentResponse.setMessage("List of Comments for " + post.getTitle());
         commentResponse.setComments(post.getComments());
 
@@ -62,6 +59,7 @@ public class CommentController {
         }
 
         Comment comment = commentService.addComment(request, post, authUser);
+        CommentResponse commentResponse = new CommentResponse();
         commentResponse.setComment(comment);
         commentResponse.setMessage("Comment Added Successfully!!!");
 
@@ -83,6 +81,7 @@ public class CommentController {
         }
 
         Comment updatedComment = commentService.updateComment(comment, request);
+        CommentResponse commentResponse = new CommentResponse();
         commentResponse.setComment(updatedComment);
         commentResponse.setMessage("Comment Updated Successfully!!!");
 
@@ -92,7 +91,7 @@ public class CommentController {
 
     @DeleteMapping(path = "comments/{commentId}")
     public ResponseEntity<?> destroy(@PathVariable(value = "commentId") Long commentId) {
-        commentService.destroyPost(commentId);
+        commentService.destroyComment(commentId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

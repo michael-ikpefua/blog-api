@@ -5,7 +5,7 @@ import com.michael.exceptions.PostException;
 import com.michael.exceptions.UserException;
 import com.michael.model.Post;
 import com.michael.model.User;
-import com.michael.response.LikePostResponse;
+import com.michael.response.MessageResponse;
 import com.michael.service.contracts.ILikePostService;
 import com.michael.service.contracts.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(path = "posts")
-public class LikePostController {
+public class LikePostController extends BaseController{
 
     @Autowired
     ILikePostService likePostService;
@@ -25,13 +25,12 @@ public class LikePostController {
     @Autowired
     IPostService postService;
 
-    @Autowired
-    LikePostResponse likePostResponse;
 
     @PostMapping(path = "{postId}/like")
     public ResponseEntity<?> store(@PathVariable Long postId, HttpSession session) {
 
         User authUser = authUser(session);
+
         if (authUser == null) {
             throw new UserException("Please login, before you can like post.");
         }
@@ -48,10 +47,9 @@ public class LikePostController {
         }
 
         likePostService.likePost(authUser, post);
+        MessageResponse messageResponse = new MessageResponse(post.getTitle() + " is Liked by " + authUser.getFullName());
 
-        likePostResponse.setMessage(post.getTitle() + " is Liked by " + authUser.getFullName());
-
-        return new ResponseEntity<>(likePostResponse, HttpStatus.OK);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
 
     }
 
@@ -74,9 +72,9 @@ public class LikePostController {
         }
 
         likePostService.unLikePost(authUser, post);
-        likePostResponse.setMessage(post.getTitle() + " post has been disliked by " + authUser.getFullName());
+        MessageResponse messageResponse = new MessageResponse(post.getTitle() + " post has been disliked by " + authUser.getFullName());
 
-        return new ResponseEntity<>(likePostResponse, HttpStatus.OK);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
 
     }
 
@@ -88,15 +86,9 @@ public class LikePostController {
         if (post == null) throw new PostException("Post not Found!!!");
 
         int totalPostLikes = likePostService.getTotalPostLikes(post);
-        likePostResponse.setMessage("Total likes for " + post.getTitle() + " is " + totalPostLikes);
+        MessageResponse messageResponse = new MessageResponse("Total likes for " + post.getTitle() + " is " + totalPostLikes);
 
-        return new ResponseEntity<>(likePostResponse, HttpStatus.OK);
-    }
-
-    public User authUser(HttpSession session) {
-        User authUser = (User) session.getAttribute("user_session");
-
-        return authUser;
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
     private Post getPost(Long postId) {

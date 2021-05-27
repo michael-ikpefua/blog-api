@@ -22,8 +22,9 @@ public class CommentService implements ICommentService {
     @Override
     public Comment addComment(CommentRequest request, Post post, User user) {
         Comment comment = new Comment();
-//        comment.setUser(user);
-//        comment.setPost(post);
+        comment.setUser(user);
+        comment.setPost(post);
+        System.err.println(user.getFullName() + " " + post.getTitle());
         comment.setBody(request.getBody());
 
         return commentRepository.save(comment);
@@ -44,7 +45,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    public void destroyPost(Long commentId) {
+    public void destroyComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
 }
