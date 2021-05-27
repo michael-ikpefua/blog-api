@@ -10,4 +10,6 @@ public interface ILikePostService {
     void likePost(User user, Post post);
 
     void unLikePost(User user, Post post);
+
+    int getTotalPostLikes(Post post);
 }

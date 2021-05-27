@@ -1,7 +1,7 @@
 package com.michael.controller;
 
-import com.michael.exception.PostException;
-import com.michael.exception.UserException;
+import com.michael.exceptions.PostException;
+import com.michael.exceptions.UserException;
 import com.michael.model.Post;
 import com.michael.model.User;
 import com.michael.request.PostRequest;

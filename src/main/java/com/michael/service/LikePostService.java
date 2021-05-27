@@ -41,4 +41,9 @@ public class LikePostService implements ILikePostService {
             likePostRepository.delete(likePost);
         }
     }
+
+    @Override
+    public int getTotalPostLikes(Post post) {
+        return likePostRepository.countLikePostsByPost(post);
+    }
 }

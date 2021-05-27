@@ -1,8 +1,8 @@
 package com.michael.controller;
 
-import com.michael.exception.CommentException;
-import com.michael.exception.PostException;
-import com.michael.exception.UserException;
+import com.michael.exceptions.CommentException;
+import com.michael.exceptions.PostException;
+import com.michael.exceptions.UserException;
 import com.michael.model.Comment;
 import com.michael.model.Post;
 import com.michael.model.User;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 

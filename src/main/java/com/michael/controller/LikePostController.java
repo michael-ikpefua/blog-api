@@ -1,8 +1,8 @@
 package com.michael.controller;
 
-import com.michael.exception.LikePostException;
-import com.michael.exception.PostException;
-import com.michael.exception.UserException;
+import com.michael.exceptions.LikePostException;
+import com.michael.exceptions.PostException;
+import com.michael.exceptions.UserException;
 import com.michael.model.Post;
 import com.michael.model.User;
 import com.michael.response.LikePostResponse;
@@ -32,8 +32,14 @@ public class LikePostController {
     public ResponseEntity<?> store(@PathVariable Long postId, HttpSession session) {
 
         User authUser = authUser(session);
+        if (authUser == null) {
+            throw new UserException("Please login, before you can like post.");
+        }
 
         Post post = getPost(postId);
+        if (post == null) {
+            throw new PostException("The post you tryna like doesn't exist!!!");
+        }
 
         boolean isPostLiked = isPostLiked(authUser, post);
 
@@ -54,12 +60,17 @@ public class LikePostController {
 
         User authUser = authUser(session);
 
+        if (authUser == null) {
+            throw new UserException("Please login, before you can like post.");
+        }
         Post post = getPost(postId);
-
+        if (post == null) {
+            throw new PostException("The post you tryna like doesn't exist!!!");
+        }
         boolean isPostLiked = isPostLiked(authUser, post);
 
-        if (isPostLiked) {
-            throw new LikePostException(authUser.getFullName() + " already liked " + post.getTitle() + " post");
+        if (!isPostLiked) {
+            throw new LikePostException(authUser.getFullName() + " you haven't liked " + post.getTitle() + " post");
         }
 
         likePostService.unLikePost(authUser, post);
@@ -69,22 +80,27 @@ public class LikePostController {
 
     }
 
+    @GetMapping("{postId}/total-likes")
+    public ResponseEntity<?> totalLikes(@PathVariable Long postId, HttpSession session) {
+        Post post = postService.getPostById(postId);
+        User user = authUser(session);
+        if (user == null) throw new UserException("Please login to view total post likes");
+        if (post == null) throw new PostException("Post not Found!!!");
+
+        int totalPostLikes = likePostService.getTotalPostLikes(post);
+        likePostResponse.setMessage("Total likes for " + post.getTitle() + " is " + totalPostLikes);
+
+        return new ResponseEntity<>(likePostResponse, HttpStatus.OK);
+    }
+
     public User authUser(HttpSession session) {
         User authUser = (User) session.getAttribute("user_session");
-
-        if (authUser == null) {
-            throw new UserException("Please login, before you can like post.");
-        }
 
         return authUser;
     }
 
     private Post getPost(Long postId) {
         Post post = postService.getPostById(postId);
-
-        if (post == null) {
-            throw new PostException("The post you tryna like doesn't exist!!!");
-        }
 
         return post;
     }

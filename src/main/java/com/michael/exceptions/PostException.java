@@ -1,4 +1,4 @@
-package com.michael.exception;
+package com.michael.exceptions;
 
 public class PostException extends RuntimeException{
 
