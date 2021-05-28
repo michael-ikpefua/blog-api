@@ -5,6 +5,7 @@ import com.michael.exceptions.PostException;
 import com.michael.exceptions.UserException;
 import com.michael.model.Post;
 import com.michael.model.User;
+import com.michael.response.FavoritePostResponse;
 import com.michael.response.MessageResponse;
 import com.michael.service.contracts.IFavoritePostService;
 import com.michael.service.contracts.IPostService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "favorites")
@@ -26,24 +28,26 @@ public class FavoritePostController extends BaseController {
     @Autowired
     IFavoritePostService favoritePostService;
 
-    @GetMapping(path = "{postId}")
+    @GetMapping(path = "")
+    public ResponseEntity<?> index(HttpSession session) {
+        User user = authUser(session);
+        if (user == null) {
+            throw new UserException("Please Login to view favorite Post");
+        }
+        List<Post> posts = favoritePostService.getAllUserFavoritePosts(user);
+        FavoritePostResponse favoritePostResponse = new FavoritePostResponse(("List of " + user.getFullName() + " favorites post"), posts);
+        return  new ResponseEntity<>(favoritePostResponse, new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+    @PostMapping(path = "{postId}")
     public ResponseEntity<?> store(@PathVariable Long postId, HttpSession session) {
         User authUser = authUser(session);
-
-        if (authUser == null) {
-            throw new UserException("Please login, to favorite a Post..");
-        }
-
+        if (authUser == null) throw new UserException("Please login, to favorite a Post..");
         Post post = postService.getPostById(postId);
-        if (post == null) {
-            throw new PostException("Post Not Found!!!");
-        }
-
+        if (post == null) throw new PostException("Post Not Found!!!");
         boolean isAlreadyFavorited = checkIfUserHasFavoritedPost(authUser, post);
-        if (isAlreadyFavorited) {
-            throw  new FavoritePostException("User Already Favorited this Post..");
-        }
-
+        if (isAlreadyFavorited) throw  new FavoritePostException("User Already Favorited this Post..");
         favoritePostService.addFavoritePost(authUser, post);
         MessageResponse messageResponse = new MessageResponse("Post is Favorited!!!");
         return new ResponseEntity<>(messageResponse, new HttpHeaders(), HttpStatus.CREATED);
