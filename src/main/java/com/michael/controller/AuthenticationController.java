@@ -31,7 +31,7 @@ public class AuthenticationController {
         User user = userService.register(request);
         session.setAttribute("user_session", user);
 
-        return new ResponseEntity<>(new UserResponse(user, "User created successfully"), HttpStatus.OK);
+        return new ResponseEntity<>(new UserResponse("User created successfully", user), HttpStatus.OK);
 
     }
 
@@ -43,7 +43,7 @@ public class AuthenticationController {
             throw new UserException("Check Email or Password");
         }
         session.setAttribute("user_session", user);
-        return new ResponseEntity<>(new UserResponse(user, "User Successfully Logged In."), HttpStatus.OK);
+        return new ResponseEntity<>(new UserResponse( "User Successfully Logged In.", user), HttpStatus.OK);
     }
 
 }
