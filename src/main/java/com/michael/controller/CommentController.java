@@ -12,6 +12,7 @@ import com.michael.response.PostResponse;
 import com.michael.service.contracts.ICommentService;
 import com.michael.service.contracts.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,12 +66,17 @@ public class CommentController {
 
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
-//
-//    @GetMapping("/comment/{commentId}")
-//    public Comment show(@PathVariable Long commentId){
-//        Comment comment = commentService.getCommentById(commentId);
-//        return comment;
-//    }
+
+    @GetMapping("/comments/{commentId}")
+    public ResponseEntity<?> show(@PathVariable Long commentId){
+        Comment comment = commentService.getCommentById(commentId);
+        CommentResponse commentResponse = new CommentResponse();
+        commentResponse.setComment(comment);
+        commentResponse.setMessage("Comment Details");
+        //In Comment Response , add user object
+
+        return new ResponseEntity<>(commentResponse, new HttpHeaders(), HttpStatus.OK);
+    }
 
     @PutMapping(path = "comments/{commentId}")
     public ResponseEntity<CommentResponse> update(@PathVariable(value = "commentId") Long commentId, @Valid @RequestBody CommentRequest request) {
