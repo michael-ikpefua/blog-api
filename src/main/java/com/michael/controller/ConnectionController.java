@@ -63,4 +63,24 @@ public class ConnectionController extends BaseController{
         return new ResponseEntity<>(messageResponse, new HttpHeaders(), HttpStatus.CREATED);
 
     }
+
+    @DeleteMapping(path = "{connectionId}")
+    public ResponseEntity<?> destroy(@PathVariable Long connectionId, HttpSession session) {
+        User owner = authUser(session);
+        if (owner == null) throw new UserException("User Not Found. Please Login");
+        User connection = userService.getUserById(connectionId);
+        if (connection == null) throw new UserException("User Not Found. Check User Id");
+
+        boolean isConnected = connectionService.checkIfUserAlreadyExistInConnection(owner, connection);
+        if (!isConnected) {
+            throw new ConnectionException("Connection Not In List");
+        }
+
+        connectionService.removeConnection(owner, connection);
+
+        MessageResponse messageResponse = new MessageResponse("Connection Removed!!!");
+
+        return new ResponseEntity<>(messageResponse, new HttpHeaders(), HttpStatus.OK);
+    }
+
 }

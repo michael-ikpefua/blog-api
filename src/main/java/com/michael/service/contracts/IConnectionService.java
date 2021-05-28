@@ -11,4 +11,6 @@ public interface IConnectionService {
     boolean checkIfUserAlreadyExistInConnection(User owner, User connection);
 
     List<User> getConnections(User owner);
+
+    void removeConnection(User owner, User connection);
 }

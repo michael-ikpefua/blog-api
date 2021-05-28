@@ -52,4 +52,13 @@ public class ConnectionService implements IConnectionService {
 
         return null;
     }
+
+    @Override
+    public void removeConnection(User owner, User connection) {
+        Optional<Connection> connectionOptional = connectionRepository.findConnectionByOwnerAndConnecton(owner, connection);
+        if (connectionOptional.isPresent()) {
+            Connection connection1 = connectionOptional.get();
+            connectionRepository.delete(connection1);
+        }
+    }
 }
