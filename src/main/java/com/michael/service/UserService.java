@@ -39,6 +39,13 @@ public class UserService implements IUserService {
         return user;
     }
 
+    @Override
+    public User getUserById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        return optionalUser.orElse(null);
+    }
+
     public boolean checkIfUserExist(String email) {
        return userRepository.existsUsersByEmail(email);
     }

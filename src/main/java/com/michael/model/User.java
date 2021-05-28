@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,5 +21,15 @@ public class User extends AutoDate {
     private String fullName;
     private String email;
     private String password;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "connections", joinColumns = @JoinColumn(name = "owner_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "connection_id", referencedColumnName = "id")
+//    )
+//    private List<User> owners;
+//
+//    @ManyToMany(mappedBy = "owners")
+//    private List<User> connections;
 
 }

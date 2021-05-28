@@ -10,4 +10,5 @@ public interface IUserService {
     boolean checkIfUserExist(String email);
     User register(UserRegisterRequest userRegisterRequest);
     User login(UserLoginRequest userLoginRequest);
+    User getUserById(Long id);
 }
